@@ -1,0 +1,7 @@
+jplag.jar
+result.zip
+result.xlsx
+.vscode/*
+__pycache__
+app/__pycache__
+plagiarismVenv

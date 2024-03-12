@@ -1,0 +1,8 @@
+requests
+tqdm
+nbconvert
+nbformat
+ipython
+patool
+pandas
+openpyxl
