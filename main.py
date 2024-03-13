@@ -1,16 +1,17 @@
 import sys
+from argparse import ArgumentParser
 from app.cleanup import remove_generated_artifacts
 from app.decorators import timeit
 from app.excel_report_generator import generate_excel_report
 from app.jplag_utility import check_java_environment, check_jplag_jar_exists, download_jplag_jar, run_jplag_jar
 from app.merge_files import merge_each_student_suibmissions
 from app.notebook_to_script_converter import batch_convert_ipynb_to_py
-from app.unzip_files import extract_zip_and_rar_files, extract_zip_file
+from app.unzip_files import extract_zip_and_rar_files
 
 
-# Define Paramters - You modify these variables according to your need
-SUBMISSION_SOURCE_FOLDER_NAME: str = './CSE221 Lab Assignment 1' # name of the folder where submissions are stored
-ASSIGNMENT_SUBMITTED_AS_ZIP_FILE: bool = True # if students are submitting multiple files in a zip, if it is a single file submission then mark it as False
+# Define Paramters - These will get updated based on the value given on command line arguments
+SUBMISSION_SOURCE_FOLDER_NAME: str = '' # name of the folder where submissions are stored
+ASSIGNMENT_SUBMITTED_AS_ZIP_FILE: bool = False # if students are submitting multiple files in a zip, if it is a single file submission then mark it as False
 
 
 
@@ -27,6 +28,16 @@ def __main__() -> None:
 
 
     try:
+
+        # Taking parameters from Command Line Arguments
+        argument_parser = ArgumentParser()
+        argument_parser.add_argument('--submission-folder-name', type=str, required=True)
+        argument_parser.add_argument('--zipped-submission', action='store_true')
+        argument_parser.set_defaults(zipped_submission=False)
+
+        arguments = argument_parser.parse_args()
+        SUBMISSION_SOURCE_FOLDER_NAME = arguments.submission_folder_name
+        ASSIGNMENT_SUBMITTED_AS_ZIP_FILE = arguments.zipped_submission
 
 
         # Removing any residual files from previous runs
