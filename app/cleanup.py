@@ -34,5 +34,8 @@ def remove_generated_artifacts(exclude_result_artifacts: bool = False) -> None:
 
     for removable_file in removable_files:
 
-        os.remove(removable_file)
+        if os.path.exists(removable_file):
+
+            os.remove(removable_file)
+            
     
