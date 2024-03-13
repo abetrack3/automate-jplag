@@ -41,6 +41,8 @@ There are few steps to be taken care of before this script can be run
 
         * To know more about Python Virtual Environments: [Link](https://mothergeo-py.readthedocs.io/en/latest/development/how-to/venv-win.html)
 
+    * (Optional) Upgrade your pip by entering the following command: `pip  install --upgrade pip`
+
     * All the required dependencies are listed in the **requirements.txt** Just enter `pip install -r requirements.txt`
 
 * #### Download your students' assignment submission
