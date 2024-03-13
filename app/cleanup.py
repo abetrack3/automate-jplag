@@ -21,6 +21,8 @@ def remove_generated_artifacts(exclude_result_artifacts: bool = False) -> None:
         try:
         
             shutil.rmtree(removable_directory)
+
+            print(f'Removed: {removable_directory}')
         
         except Exception:
         
@@ -37,5 +39,8 @@ def remove_generated_artifacts(exclude_result_artifacts: bool = False) -> None:
         if os.path.exists(removable_file):
 
             os.remove(removable_file)
+
+            print(f'Removed: {removable_file}')
             
+
     
