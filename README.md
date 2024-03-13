@@ -49,8 +49,8 @@ There are few steps to be taken care of before this script can be run
 
 * #### Run your code
 
-    * If students are submitting mutliple files in a zip file enter the command: `python main.py "{submission folder name}" --zipped-submission`
-    * Else, enter the command: `python main.py "{submission folder name}"`
+    * If students are submitting mutliple files in a zip file enter the command: `python main.py --submission-folder-name "{submission folder name}" --zipped-submission`
+    * Else, enter the command: `python --submission-folder-name main.py "{submission folder name}"`
 
 ## After running the script..
 
