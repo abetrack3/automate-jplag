@@ -8,7 +8,7 @@ from app.unzip_files import extract_zip_file
 
 def __extract_student_id_from_file_name(file_name: str) -> Optional[str]:
 
-    pattern: str = r'(\d{8})'
+    pattern: str = r'(\d{4,8})'
 
     matches = re.findall(pattern, file_name)
 
