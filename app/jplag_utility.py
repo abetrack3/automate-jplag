@@ -114,7 +114,7 @@ def run_jplag_jar(source_directory: str, jar_path: str = JPLAG_JAR_FILE_NAME) ->
 
     try:
 
-        process = subprocess.Popen(['java', '-jar', jar_path, source_directory, '-l', 'python3'],
+        process = subprocess.Popen(['java', '-jar', jar_path, source_directory, '-l', 'python3', '-n', '-1'],
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.STDOUT,
                                    text=True)
