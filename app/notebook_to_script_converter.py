@@ -20,7 +20,7 @@ def convert_ipynb_to_py(input_path, output_path):
 
 
 def batch_convert_ipynb_to_py(input_dir, output_dir):
-    
+
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -28,7 +28,7 @@ def batch_convert_ipynb_to_py(input_dir, output_dir):
 
 
         if 'MACOSX' in current_path:
-            
+
             continue
         
 

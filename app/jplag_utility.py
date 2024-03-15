@@ -38,30 +38,30 @@ def check_java_environment() -> int:
 
         # Extract and print the Java version
         version_match = re.search(r'"(\d+\.\d+)', java_version_info)
-        
+
         if version_match:
-        
+
             java_version = version_match.group(1)
-        
+
             print(f"Java is installed. Version: {java_version}")
-        
+
             return int(float(java_version))
-        
+
         else:
-        
+
             print("Java version information could not be determined.")
-            
+
 
     except subprocess.CalledProcessError:
-        
+
         print("Java is not installed or not in the system's PATH.")
-        
+
     except Exception as e:
-        
+
         print(f"An error occurred: {e}")
 
     return -1
-    
+
 
 def check_jplag_jar_exists(jar_path: str = JPLAG_JAR_FILE_NAME) -> bool:
 
@@ -71,7 +71,7 @@ def check_jplag_jar_exists(jar_path: str = JPLAG_JAR_FILE_NAME) -> bool:
 def download_jplag_jar(jar_url: str = JPLAG_JAR_DOWNLOAD_URL, jar_path: str = JPLAG_JAR_FILE_NAME) -> None:
 
     try:
-        
+
         # Send a GET request to the URL
         response = requests.get(jar_url, stream=True)
 
@@ -86,10 +86,10 @@ def download_jplag_jar(jar_url: str = JPLAG_JAR_DOWNLOAD_URL, jar_path: str = JP
 
         # Open a file for writing in binary mode
         with open(jar_path, 'wb') as file:
-            
+
             # Iterate over the response content in chunks
             for chunk in response.iter_content(chunk_size=1024):
-            
+
                 # Write the chunk to the file
                 file.write(chunk)
 
@@ -120,7 +120,7 @@ def run_jplag_jar(source_directory: str, jar_path: str = JPLAG_JAR_FILE_NAME) ->
                                    text=True)
 
         for console_output_line in process.stdout:
-            
+
             print(console_output_line.strip())
 
         return_code = process.wait()
@@ -130,13 +130,13 @@ def run_jplag_jar(source_directory: str, jar_path: str = JPLAG_JAR_FILE_NAME) ->
             print('JPlag execution successful')
 
             print(JPLAG_SUCCESFUL_RUN_PROMPT)
-        
+
         else:
 
             print('JPlag execution failed')
 
             sys.exit(return_code)
-    
+
     except Exception as caught_exception:
 
         print('An error occured while running JPlag')

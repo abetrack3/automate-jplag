@@ -15,7 +15,7 @@ def __extract_student_id_from_file_name(file_name: str) -> Optional[str]:
     if matches:
 
         return matches[0]
-    
+
     else:
 
         return None

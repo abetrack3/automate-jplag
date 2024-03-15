@@ -94,13 +94,13 @@ def __main__() -> None:
         # Generate Human Readable Excel Report
         generate_excel_report()
 
-    
+
     except KeyboardInterrupt:
-        
+
         pass
 
     finally:
-    
+
         # Removing any residual files from current runs
         remove_generated_artifacts(exclude_result_artifacts=True)
 
