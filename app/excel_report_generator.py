@@ -28,13 +28,13 @@ def generate_excel_report() -> None:
 
     _, _, json_file_names = next(os.walk('result'))
 
-    file_comparisons: List[Tuple[str, str]] = list(map(lambda file_name: file_name.replace('.json', '').split('-'), json_file_names))
+    file_comparisons: List[Tuple[str, str]] = list(map(lambda file_name: file_name.removesuffix('.py.json').split('.py-'), json_file_names))
 
     result_set: List[Tuple[str, str, float]] = []
 
     for each_comparison in file_comparisons:
 
-        if each_comparison[0] == 'overview':
+        if each_comparison[0] == 'overview.json':
 
             continue
 
@@ -42,7 +42,7 @@ def generate_excel_report() -> None:
 
         second_student_id: str = __extract_student_id_from_file_name(each_comparison[1])
 
-        file_name: str = '-'.join(each_comparison) + '.json'
+        file_name: str = '-'.join(list(map(lambda x: f'{x}.py', each_comparison))) + '.json'
 
         with open(f'./result/{file_name}', 'r', encoding='utf-8') as json_file_object:
 
