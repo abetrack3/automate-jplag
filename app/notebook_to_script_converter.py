@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 import os
 from typing import List
 import nbformat
@@ -18,6 +19,8 @@ def convert_ipynb_to_py(input_path, output_path):
     with open(output_path, 'w', encoding='utf-8') as python_file:
         python_file.write(python_code)
 
+    print(f'\nConverted: {output_path}')
+
 
 def batch_convert_ipynb_to_py(input_dir, output_dir):
 
@@ -30,34 +33,37 @@ def batch_convert_ipynb_to_py(input_dir, output_dir):
         if 'MACOSX' in current_path:
 
             continue
-        
 
 
-        file_names: List[str] = list(filter(lambda file_name: file_name.endswith(PYTHON_SCRIPT_EXTENSION) or file_name.endswith(PYTHON_NOTEBOOK_EXTENSION),
-                                 file_names))
 
-        for each_file_name in file_names:
+        file_names: List[str] = list(filter(lambda file_name: file_name.endswith((PYTHON_SCRIPT_EXTENSION, PYTHON_NOTEBOOK_EXTENSION)), file_names))
 
-            input_file_path: str = os.path.join(current_path, each_file_name)
-            output_file_dir: str = current_path.replace(input_dir, output_dir)
-            output_file_path: str = os.path.join(output_file_dir, each_file_name)
+        with ThreadPoolExecutor() as executor:
 
-            if not os.path.exists(output_file_dir):
-            
-                os.makedirs(output_file_dir)
-            
-            
-            if each_file_name.endswith(PYTHON_SCRIPT_EXTENSION):
+            for each_file_name in file_names:
 
-                shutil.copy2(input_file_path, output_file_path)
+                input_file_path: str = os.path.join(current_path, each_file_name)
+                output_file_dir: str = current_path.replace(input_dir, output_dir)
+                output_file_path: str = os.path.join(output_file_dir, each_file_name)
 
-            
-            elif each_file_name.endswith(PYTHON_NOTEBOOK_EXTENSION):
+                if not os.path.exists(output_file_dir):
 
-                output_file_path = output_file_path.replace(PYTHON_NOTEBOOK_EXTENSION, PYTHON_SCRIPT_EXTENSION)
+                    os.makedirs(output_file_dir)
 
-                convert_ipynb_to_py(input_file_path, output_file_path)
 
-                print(f'Converted: {output_file_path}')
+                if each_file_name.endswith(PYTHON_SCRIPT_EXTENSION):
+
+                    shutil.copy2(input_file_path, output_file_path)
+
+
+                elif each_file_name.endswith(PYTHON_NOTEBOOK_EXTENSION):
+
+                    output_file_path = output_file_path.replace(PYTHON_NOTEBOOK_EXTENSION, PYTHON_SCRIPT_EXTENSION)
+
+                    # convert_ipynb_to_py(input_file_path, output_file_path)
+
+                    executor.submit(convert_ipynb_to_py, input_file_path, output_file_path)
+
+        executor.shutdown(wait=True)
 
 
