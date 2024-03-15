@@ -30,7 +30,7 @@ def generate_excel_report() -> None:
 
     file_comparisons: List[Tuple[str, str]] = list(map(lambda file_name: file_name.removesuffix('.py.json').split('.py-'), json_file_names))
 
-    result_set: List[Tuple[str, str, float]] = []
+    result_set: List[Tuple[str, str, str, str, float]] = []
 
     for each_comparison in file_comparisons:
 
@@ -52,13 +52,19 @@ def generate_excel_report() -> None:
 
             if first_student_id != second_student_id:
 
-                result_set.append((first_student_id, second_student_id, similarity))
-        
-    source_student_ids, target_student_ids, similarities = zip(*result_set)
+                result_set.append((first_student_id,
+                                   second_student_id,
+                                   each_comparison[0],
+                                   each_comparison[1],
+                                   similarity))
+
+    source_student_ids, target_student_ids, source_student_file_name, target_student_file_name, similarities = zip(*result_set)
 
     data_frame = pd.DataFrame({
         'Source': source_student_ids,
         'Target': target_student_ids,
+        'Student A File Name': source_student_file_name,
+        'Student B File Name': target_student_file_name,
         'Similarity Percentage': similarities,
     })
 
