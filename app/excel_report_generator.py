@@ -58,7 +58,7 @@ def generate_excel_report() -> None:
                                    each_comparison[1],
                                    similarity))
 
-    result_set.sort(key=lambda element: element[0])
+    result_set = sorted(result_set)
 
     source_student_ids, target_student_ids, source_student_file_name, target_student_file_name, similarities = zip(*result_set)
 
