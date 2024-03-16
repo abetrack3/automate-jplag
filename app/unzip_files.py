@@ -7,6 +7,7 @@ def extract_zip_file(zip_file, extract_path):
         zip_ref.extractall(extract_path)
 
 def extract_rar_file(rar_file, extract_path):
+    os.makedirs(extract_path)
     patoolib.extract_archive(rar_file, outdir=extract_path)
 
 def extract_zip_and_rar_files(input_dir, output_dir):
@@ -15,14 +16,14 @@ def extract_zip_and_rar_files(input_dir, output_dir):
 
     for filename in os.listdir(input_dir):
         file_path = os.path.join(input_dir, filename)
+        file_name_without_extension: str = os.path.splitext(filename)[0]
 
         if filename.endswith('.zip'):
-            file_name_without_extension: str = filename.split('.')[0]
             extract_zip_file(file_path, os.path.join(output_dir, file_name_without_extension))
             print(f'Extracted: {filename} (ZIP)')
 
         elif filename.endswith('.rar'):
-            extract_rar_file(file_path, output_dir)
+            extract_rar_file(file_path, os.path.join(output_dir, file_name_without_extension))
             print(f'Extracted: {filename} (RAR)')
 
 if __name__ == '__main__':

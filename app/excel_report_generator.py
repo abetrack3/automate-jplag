@@ -28,7 +28,7 @@ def generate_excel_report() -> None:
 
     _, _, json_file_names = next(os.walk('result'))
 
-    file_comparisons: List[Tuple[str, str]] = list(map(lambda file_name: file_name.removesuffix('.py.json').split('.py-'), json_file_names))
+    file_comparisons: List[Tuple[str, str]] = list(map(lambda file_name: file_name.replace('.py.json', '').split('.py-'), json_file_names))
 
     result_set: List[Tuple[str, str, str, str, float]] = []
 
