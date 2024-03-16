@@ -2,7 +2,7 @@ import os
 import re
 import json
 import pandas as pd
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional, Tuple
 from app.unzip_files import extract_zip_file
 
 
