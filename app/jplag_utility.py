@@ -14,7 +14,7 @@ JPLAG_SUCCESFUL_RUN_PROMPT: str = '''
 #                                                                       #
 # JPlag has successfully generated Plagiarism report.                   #
 #                                                                       #
-# You can find it in a file called "result.zip"                         #                                                                       #
+# You can find it in a file called "result.zip"                         #
 #                                                                       #
 # Upload the zip file to https://jplag.github.io/JPlag to view the      #
 # report in a readable format                                           #
