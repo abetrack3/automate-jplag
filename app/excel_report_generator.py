@@ -2,8 +2,14 @@ import os
 import re
 import json
 import pandas as pd
+from openpyxl.styles import Alignment
+from openpyxl.utils import get_column_letter
+from openpyxl.worksheet.worksheet import Worksheet
 from typing import List, Optional, Tuple
 from app.unzip_files import extract_zip_file
+
+
+EXCEL_FILE_NAME: str = 'result.xlsx'
 
 
 def __extract_student_id_from_file_name(file_name: str) -> Optional[str]:
@@ -30,6 +36,42 @@ def __custom_sort_key_function(element: Tuple[str, str, str, str, float,]) -> Tu
         element[2] if element[2] is not None else 'z',
         element[3] if element[3] is not None else 'z',
     )
+
+
+def __wrap_cells(worksheet: Worksheet) -> None:
+
+    for row in worksheet.iter_rows():
+
+        for cell in row:
+
+            cell.alignment = Alignment(wrap_text=True)
+
+
+def __write_to_excel_file(data: pd.DataFrame) -> None:
+
+    print('Generating report excel...')
+
+    with pd.ExcelWriter(EXCEL_FILE_NAME) as writer:
+
+        data.to_excel(writer, index=True)
+
+        # adjusting the column widths based on column names
+        worksheet: Worksheet = writer.sheets['Sheet1']
+
+        for column_index, column_name in enumerate(data.columns, start=2):
+
+            column_width: int = len(column_name)
+
+            column_letter: str = get_column_letter(column_index)
+
+            worksheet.column_dimensions[column_letter].width = column_width * 1.2
+
+        # Freeze the first row
+        worksheet.freeze_panes = 'A2'
+
+        __wrap_cells(worksheet)
+
+    print(F'Generated: "{EXCEL_FILE_NAME}"')
 
 
 def generate_excel_report() -> None:
@@ -87,5 +129,6 @@ def generate_excel_report() -> None:
         'Student B File Name': target_student_file_name,
     })
 
-    data_frame.to_excel('result.xlsx', index=True)
+    __write_to_excel_file(data_frame)
+
 
