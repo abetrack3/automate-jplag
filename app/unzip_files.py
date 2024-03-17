@@ -7,10 +7,12 @@ from concurrent.futures import ThreadPoolExecutor
 def extract_zip_file(zip_file, extract_path):
     with zipfile.ZipFile(zip_file, 'r') as zip_ref:
         zip_ref.extractall(extract_path)
+    print(f'\nExtracted: {zip_file} (ZIP)\n')
 
 def extract_rar_file(rar_file, extract_path):
     os.makedirs(extract_path)
     patoolib.extract_archive(rar_file, outdir=extract_path)
+    print(f'\nExtracted: {rar_file} (RAR)\n')
 
 def extract_zip_and_rar_files(input_dir, output_dir):
     if not os.path.exists(output_dir):
@@ -25,11 +27,9 @@ def extract_zip_and_rar_files(input_dir, output_dir):
 
             if filename.endswith('.zip'):
                 executor.submit(extract_zip_file, file_path, destination_file_path)
-                print(f'Extracted: {filename} (ZIP)')
 
             elif filename.endswith('.rar'):
                 executor.submit(extract_rar_file, file_path, destination_file_path)
-                print(f'Extracted: {filename} (RAR)')
 
             elif filename.endswith('.ipynb') or filename.endswith('.py'):
                 os.makedirs(destination_file_path)
