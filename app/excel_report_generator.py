@@ -50,6 +50,10 @@ def generate_excel_report() -> None:
 
             similarity: float = float(json_data['similarity'])
 
+            if similarity == 0.0:
+
+                continue
+
             if first_student_id != second_student_id:
 
                 result_set.append((first_student_id,
