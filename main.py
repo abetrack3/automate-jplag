@@ -1,4 +1,4 @@
-import sys
+import os, sys
 from argparse import ArgumentParser
 from app.cleanup import remove_generated_artifacts
 from app.decorators import timeit
@@ -42,6 +42,11 @@ def __main__() -> None:
 
         # Removing any residual files from previous runs
         remove_generated_artifacts()
+
+        # check whether the submission exists or not
+        if os.path.exists(SUBMISSION_SOURCE_FOLDER_NAME) is not True:
+            print(f'The given directory is not found: "{SUBMISSION_SOURCE_FOLDER_NAME}"')
+            sys.exit(1)
 
 
         # check whether java is installed or not
