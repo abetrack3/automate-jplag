@@ -22,21 +22,21 @@ This is just a quick automation tool to run jplag and generate plagiarism report
 There are few steps to be taken care of before this script can be run
 
 * #### Download the source code:
-    
+
     * You can either clone it using `git clone https://github.com/abetrack3/automate-jplag.git`. (Assuming you have git installed)
 
     * Or, download as zip from here https://github.com/abetrack3/automate-jplag and then extract
 
 * #### Start your IDE:
-    
+
     * Open the folder containing the source code in your IDE (example: VSCode, PyCharm)
 
 * #### Install dependencies:
 
     * (Optional) Upgrade your pip by entering the following command: `pip  install --upgrade pip`
 
-    * It is recommended to create a virtual environment beforehand
-        
+    * (Recommended) Create a virtual environment beforehand
+
         * Enter the following command from your IDE's terminal `python -m venv plagiarismVenv'
 
         * Activate the environment: `.\plagiarismVenv\Scripts\activate`
