@@ -8,6 +8,18 @@ import shutil
 # Defining Constants
 PYTHON_SCRIPT_EXTENSION: str = '.py'
 PYTHON_NOTEBOOK_EXTENSION: str = '.ipynb'
+SKIPPABLE_DIRECTORIES: List[str] = [
+    'bin',
+    'lib',
+    'Lib',
+    'lib64',
+    'share',
+    'MACOSX',
+    'Scripts',
+    'include',
+    'pyvenv.cfg',
+]
+
 
 def convert_ipynb_to_py(input_path, output_path):
     with open(input_path, 'r', encoding='utf-8') as notebook_file:
@@ -29,18 +41,16 @@ def batch_convert_ipynb_to_py(input_dir, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    for current_path, _, file_names in os.walk(input_dir):
+    with ThreadPoolExecutor() as executor:
 
+        for current_path, _, file_names in os.walk(input_dir):
 
-        if 'MACOSX' in current_path:
+            if any(skippable_directory in current_path for skippable_directory in SKIPPABLE_DIRECTORIES):
 
-            continue
+                continue
 
+            file_names: List[str] = list(filter(lambda file_name: file_name.endswith((PYTHON_SCRIPT_EXTENSION, PYTHON_NOTEBOOK_EXTENSION)), file_names))
 
-
-        file_names: List[str] = list(filter(lambda file_name: file_name.endswith((PYTHON_SCRIPT_EXTENSION, PYTHON_NOTEBOOK_EXTENSION)), file_names))
-
-        with ThreadPoolExecutor() as executor:
 
             for each_file_name in file_names:
 
@@ -62,10 +72,8 @@ def batch_convert_ipynb_to_py(input_dir, output_dir):
 
                     output_file_path = output_file_path.replace(PYTHON_NOTEBOOK_EXTENSION, PYTHON_SCRIPT_EXTENSION)
 
-                    # convert_ipynb_to_py(input_file_path, output_file_path)
-
                     executor.submit(convert_ipynb_to_py, input_file_path, output_file_path)
 
-        executor.shutdown(wait=True)
+    executor.shutdown(wait=True)
 
 
