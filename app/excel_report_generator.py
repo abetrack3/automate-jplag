@@ -54,13 +54,15 @@ def generate_excel_report() -> None:
 
                 continue
 
+            similarity_in_percentage: float = round(similarity * 100.0, 2)
+
             if first_student_id != second_student_id:
 
                 result_set.append((first_student_id,
                                    second_student_id,
                                    each_comparison[0],
                                    each_comparison[1],
-                                   similarity))
+                                   similarity_in_percentage))
 
     result_set = sorted(result_set)
 
