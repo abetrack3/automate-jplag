@@ -33,17 +33,19 @@ There are few steps to be taken care of before this script can be run
 
 * #### Install dependencies:
 
-    * (Optional) Upgrade your pip by entering the following command: `pip  install --upgrade pip`
+    * Open up the terminal from the IDE, all of the command mentioned belkow will go through here
 
-    * (Recommended) Create a virtual environment beforehand
+    * (Optional) Upgrade your pip by entering the following command in the terminal: `pip  install --upgrade pip`
+
+    * (Optional - Recommended) Create a virtual environment beforehand
 
         * Enter the following command from your IDE's terminal `python -m venv plagiarismVenv'
 
-        * Activate the environment: `.\plagiarismVenv\Scripts\activate`
+        * Activate the environment: `.\\plagiarismVenv\\Scripts\\activate`
 
         * To know more about Python Virtual Environments: [Link](https://mothergeo-py.readthedocs.io/en/latest/development/how-to/venv-win.html)
 
-    * All the required dependencies are listed in the **requirements.txt** Just enter `pip install -r requirements.txt --no-cache-dir`
+    * All the required dependencies are listed in the **requirements.txt** Just enter `pip install -r requirements.txt --no-cache-dir` into the terminal
 
 * #### Download your students' assignment submission
 
