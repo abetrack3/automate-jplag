@@ -5,3 +5,4 @@ result.xlsx
 __pycache__
 app/__pycache__
 plagiarismVenv
+venv
