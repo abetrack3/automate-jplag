@@ -18,6 +18,7 @@ SKIPPABLE_DIRECTORIES: List[str] = [
     'Scripts',
     'include',
     'pyvenv.cfg',
+    '__pycache__',
 ]
 
 
