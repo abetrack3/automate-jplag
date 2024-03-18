@@ -8,7 +8,7 @@ def get_merged_solution_code(source_directory: str) -> str:
     for current_path, _, files in os.walk(source_directory):
 
         if 'MACOSX' in current_path:
-            
+
             continue
 
 
@@ -25,7 +25,7 @@ def get_merged_solution_code(source_directory: str) -> str:
                 subtask_solution: str = input_file_object.read()
 
                 solution_code.append(subtask_solution)
-    
+
     merged_solution_code: str = '\n\n'.join(solution_code)
 
     return merged_solution_code
@@ -34,7 +34,7 @@ def get_merged_solution_code(source_directory: str) -> str:
 def merge_each_student_suibmissions(source_directory: str, destination_directory: str) -> None:
 
     if os.path.exists(destination_directory) is not True:
-        
+
         os.makedirs(destination_directory)
 
     student_submission_folder_names: List[str] = os.listdir(source_directory)
