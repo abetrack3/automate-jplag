@@ -9,17 +9,12 @@ from app.notebook_to_script_converter import batch_convert_ipynb_to_py
 from app.unzip_files import extract_zip_and_rar_files
 
 
-# Define Paramters - These will get updated based on the value given on command line arguments
-SUBMISSION_SOURCE_FOLDER_NAME: str = '' # name of the folder where submissions are stored
-ASSIGNMENT_SUBMITTED_AS_ZIP_FILE: bool = False # if students are submitting multiple files in a zip, if it is a single file submission then mark it as False
-
-
 
 # Define Constants
 REQUIRED_JAVA_VERSION: int = 17
-UNZIPPED_FILES_FOLDER_NAME: str = 'UNZIPPED'
-CONVERTED_FILES_FOLDER_NAME: str = 'CONVERTED'
-JPLAG_SCANNABLE_FOLDER_NAME: str = 'JPLAG SCANNABLE'
+UNZIPPED_FILES_FOLDER: str = 'UNZIPPED'
+CONVERTED_FILES_FOLDER: str = 'CONVERTED'
+JPLAG_SCANNABLE_FOLDER: str = 'JPLAG SCANNABLE'
 
 
 
@@ -32,16 +27,14 @@ def __main__() -> None:
         # Taking parameters from Command Line Arguments
         argument_parser = ArgumentParser()
         argument_parser.add_argument('--submission-folder-name', type=str, required=True)
-        argument_parser.add_argument('--zipped-submission', action='store_true')
-        argument_parser.set_defaults(zipped_submission=False)
 
         arguments = argument_parser.parse_args()
-        SUBMISSION_SOURCE_FOLDER_NAME = arguments.submission_folder_name
-        ASSIGNMENT_SUBMITTED_AS_ZIP_FILE = arguments.zipped_submission
+        SUBMISSION_SOURCE_FOLDER_NAME: str = arguments.submission_folder_name
 
 
         # Removing any residual files from previous runs
         remove_generated_artifacts()
+
 
         # check whether the submission exists or not
         if os.path.exists(SUBMISSION_SOURCE_FOLDER_NAME) is not True:
@@ -78,22 +71,19 @@ def __main__() -> None:
 
 
         # unzipping each students' submission files
-        if ASSIGNMENT_SUBMITTED_AS_ZIP_FILE is True:
-            extract_zip_and_rar_files(SUBMISSION_SOURCE_FOLDER_NAME, UNZIPPED_FILES_FOLDER_NAME)
+        extract_zip_and_rar_files(SUBMISSION_SOURCE_FOLDER_NAME, UNZIPPED_FILES_FOLDER)
 
 
         # Convert any IPython NoteBook Files in plain pure python script
-        batch_convert_ipynb_to_py(UNZIPPED_FILES_FOLDER_NAME if ASSIGNMENT_SUBMITTED_AS_ZIP_FILE else SUBMISSION_SOURCE_FOLDER_NAME,
-                                  CONVERTED_FILES_FOLDER_NAME)
+        batch_convert_ipynb_to_py(UNZIPPED_FILES_FOLDER, CONVERTED_FILES_FOLDER)
 
 
         # If students are submitting multiple files in a zip format then we need to merge those code files into a single file for each student
-        if ASSIGNMENT_SUBMITTED_AS_ZIP_FILE is True:
-            merge_each_student_suibmissions(CONVERTED_FILES_FOLDER_NAME, JPLAG_SCANNABLE_FOLDER_NAME)
+        merge_each_student_suibmissions(CONVERTED_FILES_FOLDER, JPLAG_SCANNABLE_FOLDER)
 
 
         # Run JPlag and generate plagiarism report
-        run_jplag_jar(JPLAG_SCANNABLE_FOLDER_NAME if ASSIGNMENT_SUBMITTED_AS_ZIP_FILE is True else CONVERTED_FILES_FOLDER_NAME)
+        run_jplag_jar(JPLAG_SCANNABLE_FOLDER)
 
 
         # Generate Human Readable Excel Report
