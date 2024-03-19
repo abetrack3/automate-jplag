@@ -17,6 +17,7 @@ SKIPPABLE_DIRECTORIES: List[str] = [
     'MACOSX',
     'Scripts',
     'include',
+    'Include',
     'pyvenv.cfg',
     '__pycache__',
 ]
