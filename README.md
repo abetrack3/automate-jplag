@@ -21,6 +21,10 @@ This is just a quick automation tool to run jplag and generate plagiarism report
 
 There are few steps to be taken care of before this script can be run
 
+* #### Also you can check out the YouTube Tutorial:
+
+    * Video Link: https://youtu.be/4boT6H_Mi0U
+
 * #### Download the source code:
 
     * You can either clone it using `git clone https://github.com/abetrack3/automate-jplag.git`. (Assuming you have git installed)
