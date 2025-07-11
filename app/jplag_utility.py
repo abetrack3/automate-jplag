@@ -5,9 +5,7 @@ import requests
 import subprocess
 from tqdm import tqdm
 
-
-
-JPLAG_SUCCESFUL_RUN_PROMPT: str = '''
+JPLAG_SUCCESSFUL_RUN_PROMPT: str = '''
 
 #########################################################################
 #                                                                       #
@@ -23,126 +21,152 @@ JPLAG_SUCCESFUL_RUN_PROMPT: str = '''
 #########################################################################
 '''
 
-
 # Constants
 JPLAG_JAR_FILE_NAME: str = 'jplag.jar'
-JPLAG_JAR_DOWNLOAD_URL: str = 'https://github.com/jplag/JPlag/releases/download/v4.3.0/jplag-4.3.0-jar-with-dependencies.jar'
-
+JPLAG_JAR_DOWNLOAD_URL: str = ('https://github.com/jplag/JPlag/releases/download/v6.1.0/jplag-6.1.0-jar-with'
+                               '-dependencies.jar')
 
 
 def check_java_environment() -> int:
+	try:
+		# Run 'java -version' command to check if Java is installed
+		java_version_info = subprocess.check_output(['java', '-version'], stderr=subprocess.STDOUT, text=True)
 
-    try:
-        # Run 'java -version' command to check if Java is installed
-        java_version_info = subprocess.check_output(['java', '-version'], stderr=subprocess.STDOUT, text=True)
+		# Extract and print the Java version
+		version_match = re.search(r'"(\d+\.\d+)', java_version_info)
 
-        # Extract and print the Java version
-        version_match = re.search(r'"(\d+\.\d+)', java_version_info)
+		if version_match:
 
-        if version_match:
+			java_version = version_match.group(1)
 
-            java_version = version_match.group(1)
+			print(f"Java is installed. Version: {java_version}")
 
-            print(f"Java is installed. Version: {java_version}")
+			return int(float(java_version))
 
-            return int(float(java_version))
+		else:
 
-        else:
+			print("Java version information could not be determined.")
 
-            print("Java version information could not be determined.")
+	except subprocess.CalledProcessError:
 
+		print("Java is not installed or not in the system's PATH.")
 
-    except subprocess.CalledProcessError:
+	except Exception as e:
 
-        print("Java is not installed or not in the system's PATH.")
+		print(f"An error occurred: {e}")
 
-    except Exception as e:
-
-        print(f"An error occurred: {e}")
-
-    return -1
+	return -1
 
 
 def check_jplag_jar_exists(jar_path: str = JPLAG_JAR_FILE_NAME) -> bool:
-
-    return os.path.exists(jar_path)
+	return os.path.exists(jar_path)
 
 
 def download_jplag_jar(jar_url: str = JPLAG_JAR_DOWNLOAD_URL, jar_path: str = JPLAG_JAR_FILE_NAME) -> None:
+	try:
 
-    try:
+		# Send a GET request to the URL
+		response = requests.get(jar_url, stream=True)
 
-        # Send a GET request to the URL
-        response = requests.get(jar_url, stream=True)
+		# Check if the request was successful (HTTP status code 200)
+		response.raise_for_status()
 
-        # Check if the request was successful (HTTP status code 200)
-        response.raise_for_status()
+		# Get the total file size from the "Content-Length" header
+		file_size = int(response.headers.get('Content-Length', 0))
 
-        # Get the total file size from the "Content-Length" header
-        file_size = int(response.headers.get('Content-Length', 0))
+		# Create a tqdm progress bar
+		progress_bar = tqdm(desc='Downloading JPlag', total=file_size, unit='B', unit_scale=True)
 
-        # Create a tqdm progress bar
-        progress_bar = tqdm(desc='Downloading JPlag', total=file_size, unit='B', unit_scale=True)
+		# Open a file for writing in binary mode
+		with open(jar_path, 'wb') as file:
 
-        # Open a file for writing in binary mode
-        with open(jar_path, 'wb') as file:
+			# Iterate over the response content in chunks
+			for chunk in response.iter_content(chunk_size=1024):
+				# Write the chunk to the file
+				file.write(chunk)
 
-            # Iterate over the response content in chunks
-            for chunk in response.iter_content(chunk_size=1024):
+				# Update the progress bar
+				progress_bar.update(len(chunk))
 
-                # Write the chunk to the file
-                file.write(chunk)
+		# Close the progress bar
+		progress_bar.close()
 
-                # Update the progress bar
-                progress_bar.update(len(chunk))
+		print(f"JPlag download complete. File saved to {jar_path}")
 
-        # Close the progress bar
-        progress_bar.close()
+	except requests.exceptions.RequestException as e:
 
-        print(f"JPlag download complete. File saved to {jar_path}")
+		print(f"Download failed: {e}")
 
-    except requests.exceptions.RequestException as e:
+	except Exception as e:
 
-        print(f"Download failed: {e}")
-
-    except Exception as e:
-
-        print(f"An error occurred: {e}")
+		print(f"An error occurred: {e}")
 
 
 def run_jplag_jar(source_directory: str, jar_path: str = JPLAG_JAR_FILE_NAME) -> None:
+	try:
 
-    try:
+		process = subprocess.Popen(['java', '-jar', jar_path, source_directory, '--language', 'python3',
+		                            '--mode', 'RUN', '--shown-comparisons', '-1', '--normalize', '--min-tokens', '5',
+		                            '--csv-export', '--overwrite'],
+		                           stdout=subprocess.PIPE,
+		                           stderr=subprocess.STDOUT,
+		                           text=True)
 
-        process = subprocess.Popen(['java', '-jar', jar_path, source_directory, '-l', 'python3', '-n', '-1'],
-                                   stdout=subprocess.PIPE,
-                                   stderr=subprocess.STDOUT,
-                                   text=True)
+		for console_output_line in process.stdout:
+			print(console_output_line.strip())
 
-        for console_output_line in process.stdout:
+		return_code = process.wait()
 
-            print(console_output_line.strip())
+		if return_code == 0:
 
-        return_code = process.wait()
+			print('JPlag execution successful')
 
-        if return_code == 0:
+			print(JPLAG_SUCCESSFUL_RUN_PROMPT)
 
-            print('JPlag execution successful')
+		else:
 
-            print(JPLAG_SUCCESFUL_RUN_PROMPT)
+			print('JPlag execution failed')
 
-        else:
+			sys.exit(return_code)
 
-            print('JPlag execution failed')
+	except Exception as caught_exception:
 
-            sys.exit(return_code)
+		print('An error occurred while running JPlag')
 
-    except Exception as caught_exception:
+		print(caught_exception)
 
-        print('An error occured while running JPlag')
-
-        print(caught_exception)
-
-        sys.exit(1)
+		sys.exit(1)
 
 
+def open_jplag_report_viewer(file_path: str = 'results.jplag', jar_path: str = JPLAG_JAR_FILE_NAME) -> None:
+	try:
+
+		process = subprocess.Popen(['java', '-jar', jar_path, file_path],
+		                           stdout=subprocess.PIPE,
+		                           stderr=subprocess.STDOUT,
+		                           text=True)
+
+		for console_output_line in process.stdout:
+			print(console_output_line.strip())
+
+		return_code = process.wait()
+
+		if return_code == 0:
+			pass
+
+		else:
+
+			print('JPlag execution failed')
+
+			sys.exit(return_code)
+
+	except KeyboardInterrupt:
+		return
+
+	except Exception as caught_exception:
+
+		print('An error occurred while running JPlag')
+
+		print(caught_exception)
+
+		sys.exit(1)

@@ -31,7 +31,7 @@ def get_merged_solution_code(source_directory: str) -> str:
     return merged_solution_code
 
 
-def merge_each_student_suibmissions(source_directory: str, destination_directory: str) -> None:
+def merge_each_student_submissions(source_directory: str, destination_directory: str) -> None:
 
     if os.path.exists(destination_directory) is not True:
 
