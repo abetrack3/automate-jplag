@@ -136,3 +136,37 @@ def run_jplag_jar(source_directory: str, jar_path: str = JPLAG_JAR_FILE_NAME) ->
 		print(caught_exception)
 
 		sys.exit(1)
+
+
+def open_jplag_report_viewer(file_path: str = 'results.jplag', jar_path: str = JPLAG_JAR_FILE_NAME) -> None:
+	try:
+
+		process = subprocess.Popen(['java', '-jar', jar_path, file_path],
+		                           stdout=subprocess.PIPE,
+		                           stderr=subprocess.STDOUT,
+		                           text=True)
+
+		for console_output_line in process.stdout:
+			print(console_output_line.strip())
+
+		return_code = process.wait()
+
+		if return_code == 0:
+			pass
+
+		else:
+
+			print('JPlag execution failed')
+
+			sys.exit(return_code)
+
+	except KeyboardInterrupt:
+		return
+
+	except Exception as caught_exception:
+
+		print('An error occurred while running JPlag')
+
+		print(caught_exception)
+
+		sys.exit(1)
