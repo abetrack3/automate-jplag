@@ -11,7 +11,7 @@ from app.unzip_files import extract_zip_and_rar_files
 
 
 # Define Constants
-REQUIRED_JAVA_VERSION: int = 17
+REQUIRED_JAVA_VERSION: int = 21
 UNZIPPED_FILES_FOLDER: str = 'UNZIPPED'
 CONVERTED_FILES_FOLDER: str = 'CONVERTED'
 JPLAG_SCANNABLE_FOLDER: str = 'JPLAG SCANNABLE'
