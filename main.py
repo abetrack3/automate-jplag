@@ -4,7 +4,7 @@ from app.cleanup import remove_generated_artifacts
 from app.decorators import timeit
 from app.excel_report_generator import generate_excel_report
 from app.jplag_utility import check_java_environment, check_jplag_jar_exists, download_jplag_jar, run_jplag_jar
-from app.merge_files import merge_each_student_suibmissions
+from app.merge_files import merge_each_student_submissions
 from app.notebook_to_script_converter import batch_convert_ipynb_to_py
 from app.unzip_files import extract_zip_and_rar_files
 
@@ -79,7 +79,7 @@ def __main__() -> None:
 
 
         # If students are submitting multiple files in a zip format then we need to merge those code files into a single file for each student
-        merge_each_student_suibmissions(CONVERTED_FILES_FOLDER, JPLAG_SCANNABLE_FOLDER)
+        merge_each_student_submissions(CONVERTED_FILES_FOLDER, JPLAG_SCANNABLE_FOLDER)
 
 
         # Run JPlag and generate plagiarism report
