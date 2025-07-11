@@ -71,7 +71,7 @@ def __main__() -> None:
         run_jplag_jar(JPLAG_SCANNABLE_FOLDER)
 
         # Generate Human Readable Excel Report
-        # generate_excel_report()
+        generate_excel_report()
 
     except KeyboardInterrupt:
 
