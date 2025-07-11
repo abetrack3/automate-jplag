@@ -5,9 +5,7 @@ import requests
 import subprocess
 from tqdm import tqdm
 
-
-
-JPLAG_SUCCESFUL_RUN_PROMPT: str = '''
+JPLAG_SUCCESSFUL_RUN_PROMPT: str = '''
 
 #########################################################################
 #                                                                       #
@@ -23,15 +21,13 @@ JPLAG_SUCCESFUL_RUN_PROMPT: str = '''
 #########################################################################
 '''
 
-
 # Constants
 JPLAG_JAR_FILE_NAME: str = 'jplag.jar'
-JPLAG_JAR_DOWNLOAD_URL: str = 'https://github.com/jplag/JPlag/releases/download/v4.3.0/jplag-4.3.0-jar-with-dependencies.jar'
-
+JPLAG_JAR_DOWNLOAD_URL: str = ('https://github.com/jplag/JPlag/releases/download/v6.1.0/jplag-6.1.0-jar-with'
+                               '-dependencies.jar')
 
 
 def check_java_environment() -> int:
-
     try:
         # Run 'java -version' command to check if Java is installed
         java_version_info = subprocess.check_output(['java', '-version'], stderr=subprocess.STDOUT, text=True)
@@ -51,7 +47,6 @@ def check_java_environment() -> int:
 
             print("Java version information could not be determined.")
 
-
     except subprocess.CalledProcessError:
 
         print("Java is not installed or not in the system's PATH.")
@@ -64,12 +59,10 @@ def check_java_environment() -> int:
 
 
 def check_jplag_jar_exists(jar_path: str = JPLAG_JAR_FILE_NAME) -> bool:
-
     return os.path.exists(jar_path)
 
 
 def download_jplag_jar(jar_url: str = JPLAG_JAR_DOWNLOAD_URL, jar_path: str = JPLAG_JAR_FILE_NAME) -> None:
-
     try:
 
         # Send a GET request to the URL
@@ -89,7 +82,6 @@ def download_jplag_jar(jar_url: str = JPLAG_JAR_DOWNLOAD_URL, jar_path: str = JP
 
             # Iterate over the response content in chunks
             for chunk in response.iter_content(chunk_size=1024):
-
                 # Write the chunk to the file
                 file.write(chunk)
 
@@ -111,16 +103,16 @@ def download_jplag_jar(jar_url: str = JPLAG_JAR_DOWNLOAD_URL, jar_path: str = JP
 
 
 def run_jplag_jar(source_directory: str, jar_path: str = JPLAG_JAR_FILE_NAME) -> None:
-
     try:
 
-        process = subprocess.Popen(['java', '-jar', jar_path, source_directory, '-l', 'python3', '-n', '-1'],
+        process = subprocess.Popen(['java', '-jar', jar_path, source_directory, '--language', 'python3',
+                                    '--mode', 'RUN', '--shown-comparisons', '-1', '--normalize', '--min-tokens', '5',
+                                    '--csv-export', '--overwrite'],
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.STDOUT,
                                    text=True)
 
         for console_output_line in process.stdout:
-
             print(console_output_line.strip())
 
         return_code = process.wait()
@@ -129,7 +121,7 @@ def run_jplag_jar(source_directory: str, jar_path: str = JPLAG_JAR_FILE_NAME) ->
 
             print('JPlag execution successful')
 
-            print(JPLAG_SUCCESFUL_RUN_PROMPT)
+            print(JPLAG_SUCCESSFUL_RUN_PROMPT)
 
         else:
 
@@ -139,10 +131,8 @@ def run_jplag_jar(source_directory: str, jar_path: str = JPLAG_JAR_FILE_NAME) ->
 
     except Exception as caught_exception:
 
-        print('An error occured while running JPlag')
+        print('An error occurred while running JPlag')
 
         print(caught_exception)
 
         sys.exit(1)
-
-
