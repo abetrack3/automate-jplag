@@ -9,7 +9,7 @@ This is just a quick automation tool to run jplag and generate plagiarism report
 ### Pre-Requisites
 
 * You have python installed in your system, minimum version is python3.7(tested)
-* You have java installed in your system, minimum jdk is 17(tested)
+* You have java installed in your system, minimum jdk is 21(tested)
 
 
 ### Not a Pre-Requisite
@@ -62,10 +62,11 @@ There are few steps to be taken care of before this script can be run
 ## After running the script..
 
 If you have come this far, it means you have successfully run this code and as a result you will find two files geneated:
-* result.zip (You can upload it to https://jplag.github.io/JPlag to get detailed view on the plagiarism report)
+
+* results.jplag (Contains detailed plagiarism report. The script will open up the report viewer automatically)
 * result.xlsx (You will find a summarised report here)
 
 
 ## Found a bug? Do an open source contribution!
 
-This script is in its very early stage so bugs and improvements are highly plausible. Feel free to create an issue, fork it, make your changes, create a pull request. Feedbacks are always welcome!!
+This script is in its very early stage so bugs and improvements are highly plausible. Feel free to create an issue, fork it, make your changes, and finally create a pull request. Feedbacks are always welcome!!
