@@ -3,7 +3,8 @@ from argparse import ArgumentParser
 from app.cleanup import remove_generated_artifacts
 from app.decorators import timeit
 from app.excel_report_generator import generate_excel_report
-from app.jplag_utility import check_java_environment, check_jplag_jar_exists, download_jplag_jar, run_jplag_jar
+from app.jplag_utility import check_java_environment, check_jplag_jar_exists, download_jplag_jar, run_jplag_jar, \
+    open_jplag_report_viewer
 from app.merge_files import merge_each_student_submissions
 from app.notebook_to_script_converter import batch_convert_ipynb_to_py
 from app.unzip_files import extract_zip_and_rar_files
@@ -72,6 +73,9 @@ def __main__() -> None:
 
         # Generate Human Readable Excel Report
         generate_excel_report()
+        
+        # Open Jplag Report Viewer
+        open_jplag_report_viewer()
 
     except KeyboardInterrupt:
 
